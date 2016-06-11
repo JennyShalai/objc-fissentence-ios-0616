@@ -18,50 +18,86 @@
 
 @implementation FISSentence
 
+// // PUBLIC METHODS // //
+
 - (void)addWord:(NSString *)word {
-    if (![word isEqualToString:@""] && ![word is ])
-    [self.words addObject:word];
+    if ([self validWord:word]) {
+        [self.words addObject:word];
+    }
+    [self assembleSentence];
 }
 
 - (void)addWords:(NSArray *)words withPunctuation:(NSString *)punctuation {
-    
+    if (([words count] > 0) && (words != nil) && (punctuation != nil) && ([self validPunctuation:punctuation])) {
+        for (NSString *word in words) {
+            if ([self validWord:word]) {
+                 [self.words addObject:word];
+            }
+        }
+        self.punctuation = punctuation;
+    } else {
+        return;
+    }
+    [self assembleSentence];
 }
-
 
 - (void)removeWordAtIndex:(NSUInteger )index {
-    
+    if ([self validIndex:index]) {
+        [self.words removeObject:self.words[index]];
+    }
+    [self assembleSentence];
 }
-
 
 - (void)insertWord:(NSString *)word atIndex:(NSUInteger )index {
-    
+    if ([self validIndex:index]) {
+        [self.words insertObject:word atIndex:index];
+    }
+    [self assembleSentence];
 }
-
 
 - (void)replacePunctuationWithPunctuation:(NSString *)punctuation {
-    
+    if ([self validPunctuation:punctuation]) {
+        self.punctuation = punctuation;
+    }
+    [self assembleSentence];
 }
-
 
 - (void)replaceWordAtIndex:(NSUInteger)index withWord:(NSString *)word {
-    
+    if ( ([self validIndex:index]) && ([self validWord:word]) ) {
+        [self.words replaceObjectAtIndex:index withObject:word];
+    }
+    [self assembleSentence];
 }
+
+// // PRIVATE METHODS // //
 
 - (void)assembleSentence {
     self.sentence = [[self.words componentsJoinedByString:@" "] stringByAppendingString:self.punctuation];
 }
 
 - (BOOL)validWord:(NSString *)word {
-    return NO;
+    BOOL isWordValid = NO;
+    if ((![word isEqualToString:@""]) && (![word isEqualToString:@" "]) && (word != nil)) {
+        isWordValid = YES;
+    }
+    return isWordValid;
 }
 
-
 - (BOOL)validPunctuation:(NSString *)punctuation {
-    return NO;
+    BOOL isValidPunctuation = NO;
+    NSString *punctuationString = @".,:;-?!";
+    if ([punctuationString containsString:punctuation]) {
+        isValidPunctuation = YES;
+    }
+    return isValidPunctuation;
 }
 
 - (BOOL)validIndex:(NSUInteger )index {
-    return NO;
+    BOOL isValidIndex = NO;
+    if ([self.words count] > index) {
+        isValidIndex = YES;
+    }
+    return isValidIndex;
 }
 
 
