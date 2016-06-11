@@ -28,7 +28,7 @@
 }
 
 - (void)addWords:(NSArray *)words withPunctuation:(NSString *)punctuation {
-    if (([words count] > 0) && (words != nil) && (punctuation != nil) && ([self validPunctuation:punctuation])) {
+    if ((words != nil) && ([words count] > 0) && (punctuation != nil) && ([self validPunctuation:punctuation])) {
         for (NSString *word in words) {
             if ([self validWord:word]) {
                  [self.words addObject:word];
@@ -43,7 +43,7 @@
 
 - (void)removeWordAtIndex:(NSUInteger )index {
     if ([self validIndex:index]) {
-        [self.words removeObject:self.words[index]];
+        [self.words removeObjectAtIndex:index];
     }
     [self assembleSentence];
 }
@@ -77,7 +77,8 @@
 
 - (BOOL)validWord:(NSString *)word {
     BOOL isWordValid = NO;
-    if ((![word isEqualToString:@""]) && (![word isEqualToString:@" "]) && (word != nil)) {
+    NSString *wordNoSpaces = [word stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if ((word != nil) && (![word isEqualToString:@""]) && ([word isEqualToString:wordNoSpaces])) {
         isWordValid = YES;
     }
     return isWordValid;
